@@ -1,8 +1,8 @@
 %global _hardened_build 1
 
 Name:               pmacct
-Version:            1.5.2
-Release:            2
+Version:            1.6.2
+Release:            1
 Summary:            Accounting and aggregation toolsuite for IPv4 and IPv6
 License:            GPLv2+
 Group:              Applications/Engineering
@@ -21,7 +21,7 @@ Patch1:             pmacct-fix-implicit-pointer-decl.diff
 
 BuildRequires:      gcc
 BuildRequires:      make
-BuildRequires:      mariadb-devel
+BuildRequires:      mysql-devel
 BuildRequires:      libpcap-devel
 BuildRequires:      libstdc++-static
 BuildRequires:      pkgconfig
@@ -30,6 +30,7 @@ BuildRequires:      sqlite-devel >= 3.0.0
 BuildRequires:      pkgconfig(geoip)
 BuildRequires:      pkgconfig(jansson)
 BuildRequires:      systemd
+BuildRequires:      libnetfilter_log-devel
 
 Requires(post):     systemd
 Requires(preun):    systemd
@@ -69,7 +70,7 @@ export CFLAGS="%{optflags} -Wno-return-type"
     --enable-jansson \
     --enable-64bit \
     --enable-threads \
-    --enable-ulog
+    --enable-nflog
 
 make %{?_smp_mflags}
 
@@ -105,16 +106,17 @@ install %{SOURCE2} %{SOURCE4} %{SOURCE6} %{SOURCE8} %{buildroot}/%{_sysconfdir}/
 
 %files
 %defattr(-,root,root)
-%doc AUTHORS ChangeLog CONFIG-KEYS COPYING FAQS KNOWN-BUGS NEWS README TODO TOOLS UPGRADE
+%doc AUTHORS ChangeLog CONFIG-KEYS COPYING FAQS TOOLS UPGRADE
 %doc docs examples sql
 %{_bindir}/pmacct
-%{_bindir}/pmmyplay
-%{_bindir}/pmpgplay
 #
 %{_sbindir}/nfacctd
 %{_sbindir}/pmacctd
 %{_sbindir}/sfacctd
 %{_sbindir}/uacctd
+%{_sbindir}/pmbgpd
+%{_sbindir}/pmbmpd
+%{_sbindir}/pmtelemetryd
 #
 %{_unitdir}/nfacctd.service
 %{_unitdir}/pmacctd.service
@@ -131,6 +133,9 @@ install %{SOURCE2} %{SOURCE4} %{SOURCE6} %{SOURCE8} %{buildroot}/%{_sysconfdir}/
 %attr(600,root,root) %config(noreplace) %{_sysconfdir}/pmacct/pmacctd.conf
 
 %changelog
+* Sat Sep 2 2017 David van Laatum <david@vanlaatum.id.au> - 1.6.2-1
+- Update for 1.6.2
+
 * Mon Dec 21 2015 Arun Babu Neelicattu <arun.neelicattu@gmail.com> - 1.5.2-2
 - Enable ULOG
 
